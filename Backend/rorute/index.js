@@ -1,8 +1,10 @@
-const http = require("http");
+const http = require("http"); //import htttp
 const fs = require("fs");
 
 const Handle = (req, res) => {
-  let filename = "";
+  let filename = ""; // varible 
+
+  // switch case for routing
 
   switch (req.url) {
     case "/":
@@ -23,8 +25,10 @@ const Handle = (req, res) => {
   });
 };
 
+//create server
 const server = http.createServer(Handle);
 
+// listen the port
 server.listen(3000, (req, res) => {
   console.log("server is runing on 3000");
 });
