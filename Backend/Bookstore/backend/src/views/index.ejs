@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Book Store</title>
+</head>
+<body>
+
+    <h1>Add Book</h1>
+
+    <form action="/add" method="POST" enctype="multipart/form-data">
+
+        <input type="text" name="bookName" placeholder="Book Name">
+
+        <input type="text" name="bookAuthor" placeholder="Author Name">
+
+        <input type="number" name="bookPrice" placeholder="Book Price">
+
+        <input type="file" name="image">
+
+        <button>Add Book</button>
+
+    </form>
+
+    <hr>
+
+    <h1>All Books</h1>
+
+    <% books.forEach((book)=> { %>
+
+        <div>
+
+            <img 
+                src="/upload/<%= book.image %>" 
+                width="200"
+            >
+
+            <h2><%= book.bookName %></h2>
+
+            <h3><%= book.bookAuthor %></h3>
+
+            <p>₹ <%= book.bookPrice %></p>
+
+            <a href="/edit/<%= book._id %>">
+                Edit
+            </a>
+
+            <form action="/delete/<%= book._id %>" method="POST">
+
+                <button>
+                    Delete
+                </button>
+
+            </form>
+
+        </div>
+
+        <hr>
+
+    <% }) %>
+
+</body>
+</html>
