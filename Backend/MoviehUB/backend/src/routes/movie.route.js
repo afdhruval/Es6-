@@ -1,23 +1,26 @@
 import express from "express";
-const movieRoute = express.Router();
-import movieContro from "../controller/movieController.js";
+import movieController from "../controller/movieController.js";
 
-// adding movie
-movieRoute.post("/add", movieContro.movieAdd);
+const router = express.Router();
 
-// getting movie all
-movieRoute.get("/getAll", movieContro.movieGetAll);
+// EJS Pages
+router.get("/", movieController.homePage);
 
-// getting movie perticular
-movieRoute.get("/get/:id", movieContro.movieGet);
+router.get("/movies", movieController.moviesPage);
 
-// updating movie
-movieRoute.put("/update/:id",movieContro.updateMovie)
+router.get("/movie/:id", movieController.moviePage);
 
+router.get("/movie/edit/:id", movieController.editMoviePage);
 
-// deleting movie
-movieRoute.delete("/delete/:id",movieContro.deleteMovie)
+// APIs
+router.post("/add", movieController.movieAdd);
 
+router.get("/all", movieController.getAllMoviesApi);
 
+router.get("/:id", movieController.getMovieApi);
 
-export default movieRoute;
+router.put("/update/:id", movieController.updateMovie);
+
+router.delete("/delete/:id", movieController.deleteMovie);
+
+export default router;
