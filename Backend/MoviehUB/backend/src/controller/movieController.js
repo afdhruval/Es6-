@@ -20,7 +20,7 @@ async function movieAdd(req, res) {
   });
 }
 
-async function movieGet(req, res) {
+async function movieGetAll(req, res) {
   const movies = await movieModel.find();
 
   return res.status(200).json({
@@ -30,10 +30,9 @@ async function movieGet(req, res) {
 }
 
 async function updateMovie(req, res) {
-  const id = req.params;
+  const { id } = req.params;
 
   const movie = await movieModel.findByIdAndUpdate(id, req.body, { new: true });
-
   if (!movie) {
     return res.status(404).json({
       message: "Movie not founded",
@@ -46,8 +45,20 @@ async function updateMovie(req, res) {
   });
 }
 
+async function movieGet(req, res) {
+  const { id } = req.params;
+
+  const movie = await movieModel.findById(id);
+
+  return res.status(200).json({
+    message: "movie get",
+    movie,
+  });
+}
+
 export default {
   movieAdd,
+  movieGetAll,
   movieGet,
   updateMovie,
 };
