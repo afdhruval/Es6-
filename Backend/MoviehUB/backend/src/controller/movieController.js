@@ -29,6 +29,10 @@ async function movieGet(req,res){
     })
 }
 
+async function updateMovie(req,res){
+
+}
+
 export default {
-  movieAdd,movieGet
+  movieAdd,movieGet , updateMovie
 };

@@ -6,6 +6,6 @@ movieRoute.post("/add", movieContro.movieAdd);
 
 movieRoute.get("/get", movieContro.movieGet);
 
-mo
+movieRoute.put("/update/:id",movieContro.updateMovie)
 
 export default movieRoute;
