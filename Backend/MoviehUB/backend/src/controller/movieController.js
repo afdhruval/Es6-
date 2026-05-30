@@ -20,19 +20,34 @@ async function movieAdd(req, res) {
   });
 }
 
-async function movieGet(req,res){
-    const movies = await movieModel.find()
+async function movieGet(req, res) {
+  const movies = await movieModel.find();
 
-    return res.status(200).json({
-        message : "movie generated ",
-        movies
-    })
+  return res.status(200).json({
+    message: "movie generated ",
+    movies,
+  });
 }
 
-async function updateMovie(req,res){
+async function updateMovie(req, res) {
+  const id = req.params;
 
+  const movie = await movieModel.findByIdAndUpdate(id, req.body, { new: true });
+
+  if (!movie) {
+    return res.status(404).json({
+      message: "Movie not founded",
+    });
+  }
+
+  return res.status(200).json({
+    message: "movie updated successfully",
+    movie,
+  });
 }
 
 export default {
-  movieAdd,movieGet , updateMovie
+  movieAdd,
+  movieGet,
+  updateMovie,
 };
