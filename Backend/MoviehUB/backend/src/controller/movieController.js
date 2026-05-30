@@ -56,9 +56,20 @@ async function movieGet(req, res) {
   });
 }
 
+async function deleteMovie(req, res) {
+  const { id } = req.params;
+
+  const movie = await movieModel.findByIdAndDelete(id);
+
+  return res.status(200).json({
+    message: "movie deleted",
+  });
+}
+
 export default {
   movieAdd,
   movieGetAll,
   movieGet,
+  deleteMovie,
   updateMovie,
 };

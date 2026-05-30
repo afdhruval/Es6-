@@ -6,14 +6,18 @@ import movieContro from "../controller/movieController.js";
 movieRoute.post("/add", movieContro.movieAdd);
 
 // getting movie all
-movieRoute.get("/get", movieContro.movieGetAll);
+movieRoute.get("/getAll", movieContro.movieGetAll);
 
 // getting movie perticular
-movieRoute.get("/get", movieContro.movieGet);
-
-
+movieRoute.get("/get/:id", movieContro.movieGet);
 
 // updating movie
 movieRoute.put("/update/:id",movieContro.updateMovie)
+
+
+// deleting movie
+movieRoute.delete("/delete/:id",movieContro.deleteMovie)
+
+
 
 export default movieRoute;
