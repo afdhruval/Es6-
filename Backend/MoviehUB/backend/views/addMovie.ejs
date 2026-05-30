@@ -1,45 +1,81 @@
 <!DOCTYPE html>
-<html>
-  <head>
-    <title>Add Movie</title>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MovieMania - Add Movie</title>
     <script src="https://cdn.tailwindcss.com"></script>
-  </head>
-  <body class="bg-gray-100">
-    <div class="max-w-xl mx-auto mt-10 bg-white p-6 rounded shadow">
-      <h1 class="text-3xl font-bold mb-6">Add Movie</h1>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Outfit', sans-serif; background-color: #0f172a; }
+    </style>
+</head>
+<body class="text-white min-h-screen selection:bg-rose-500 selection:text-white flex flex-col">
 
-      <form action="/movie/add" method="POST">
-        <input
-          type="text"
-          name="title"
-          placeholder="Movie Title"
-          class="w-full border p-3 mb-4"
-        />
-
-        <input
-          type="text"
-          name="hero"
-          placeholder="Hero"
-          class="w-full border p-3 mb-4"
-        />
-
-        <input
-          type="text"
-          name="imgUrl"
-          placeholder="Image URL"
-          class="w-full border p-3 mb-4"
-        />
-
-        <textarea
-          name="description"
-          placeholder="Description"
-          class="w-full border p-3 mb-4"
-        ></textarea>
-
-        <button class="bg-green-500 text-white px-5 py-3 rounded">
-          Add Movie
-        </button>
-      </form>
+<nav class="bg-slate-950/80 backdrop-blur-md sticky top-0 z-50 border-b border-white/10 px-8 py-4 flex justify-between items-center">
+    <a href="/api/movie" class="text-3xl font-extrabold bg-clip-text text-transparent bg-gradient-to-r from-rose-500 to-purple-600 tracking-tight">
+        MovieMania
+    </a>
+    <div class="flex gap-4">
+        <a href="/api/movie/movies" class="text-gray-300 hover:text-white font-medium transition-colors py-2 px-4">All Movies</a>
     </div>
-  </body>
+</nav>
+
+<main class="flex-grow container mx-auto px-6 py-12 flex justify-center items-center">
+    <div class="w-full max-w-2xl bg-slate-800/60 backdrop-blur-lg rounded-2xl shadow-2xl shadow-black/50 border border-white/10 p-10">
+        
+        <div class="text-center mb-10">
+            <h1 class="text-4xl font-extrabold mb-2 text-white">Add New Movie</h1>
+            <p class="text-slate-400">Fill in the details to expand your collection.</p>
+        </div>
+
+        <form action="/api/movie/add" method="POST" class="space-y-6">
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div>
+                    <label class="block text-sm font-semibold text-slate-300 mb-2">Movie Title</label>
+                    <input type="text" name="title" required class="w-full bg-slate-900/50 border border-white/10 rounded-lg px-4 py-3 text-white placeholder-slate-500 focus:outline-none focus:border-rose-500 focus:ring-1 focus:ring-rose-500 transition-all" placeholder="e.g. Inception">
+                </div>
+                <div>
+                    <label class="block text-sm font-semibold text-slate-300 mb-2">Hero / Protagonist</label>
+                    <input type="text" name="hero" required class="w-full bg-slate-900/50 border border-white/10 rounded-lg px-4 py-3 text-white placeholder-slate-500 focus:outline-none focus:border-rose-500 focus:ring-1 focus:ring-rose-500 transition-all" placeholder="e.g. Leonardo DiCaprio">
+                </div>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div>
+                    <label class="block text-sm font-semibold text-slate-300 mb-2">Cast (Comma separated)</label>
+                    <input type="text" name="cast" required class="w-full bg-slate-900/50 border border-white/10 rounded-lg px-4 py-3 text-white placeholder-slate-500 focus:outline-none focus:border-rose-500 focus:ring-1 focus:ring-rose-500 transition-all" placeholder="e.g. Joseph Gordon-Levitt, Elliot Page">
+                </div>
+                <div>
+                    <label class="block text-sm font-semibold text-slate-300 mb-2">Duration (Minutes)</label>
+                    <input type="number" name="duration" required class="w-full bg-slate-900/50 border border-white/10 rounded-lg px-4 py-3 text-white placeholder-slate-500 focus:outline-none focus:border-rose-500 focus:ring-1 focus:ring-rose-500 transition-all" placeholder="e.g. 148">
+                </div>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div>
+                    <label class="block text-sm font-semibold text-slate-300 mb-2">Poster Image URL</label>
+                    <input type="url" name="imgUrl" required class="w-full bg-slate-900/50 border border-white/10 rounded-lg px-4 py-3 text-white placeholder-slate-500 focus:outline-none focus:border-rose-500 focus:ring-1 focus:ring-rose-500 transition-all" placeholder="https://example.com/poster.jpg">
+                </div>
+                <div>
+                    <label class="block text-sm font-semibold text-slate-300 mb-2">Trailer URL (YouTube Embed)</label>
+                    <input type="url" name="trailerMp4" class="w-full bg-slate-900/50 border border-white/10 rounded-lg px-4 py-3 text-white placeholder-slate-500 focus:outline-none focus:border-rose-500 focus:ring-1 focus:ring-rose-500 transition-all" placeholder="https://www.youtube.com/embed/...">
+                </div>
+            </div>
+
+            <div>
+                <label class="block text-sm font-semibold text-slate-300 mb-2">Synopsis / Description</label>
+                <textarea name="description" rows="4" required class="w-full bg-slate-900/50 border border-white/10 rounded-lg px-4 py-3 text-white placeholder-slate-500 focus:outline-none focus:border-rose-500 focus:ring-1 focus:ring-rose-500 transition-all resize-none" placeholder="A thief who steals corporate secrets through the use of dream-sharing technology..."></textarea>
+            </div>
+
+            <button type="submit" class="w-full bg-rose-600 hover:bg-rose-500 shadow-[0_0_20px_rgba(225,29,72,0.4)] transition-all py-4 rounded-lg text-white font-bold text-lg mt-4">
+                Add Movie to Library
+            </button>
+            
+        </form>
+    </div>
+</main>
+
+</body>
 </html>

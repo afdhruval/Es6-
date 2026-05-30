@@ -1,33 +1,82 @@
 <!DOCTYPE html>
-<html>
-  <head>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MovieMania - Edit Movie</title>
     <script src="https://cdn.tailwindcss.com"></script>
-  </head>
-  <body>
-    <div class="max-w-xl mx-auto mt-10">
-      <form action="/api/movie/update/<%= movie._id %>" method="POST">
-        <input
-          type="text"
-          name="title"
-          value="<%= movie.title %>"
-          class="border p-2 w-full mb-3"
-        />
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Outfit', sans-serif; background-color: #0f172a; }
+    </style>
+</head>
+<body class="text-white min-h-screen selection:bg-blue-500 selection:text-white flex flex-col">
 
-        <input
-          type="text"
-          name="hero"
-          value="<%= movie.hero %>"
-          class="border p-2 w-full mb-3"
-        />
-
-        <textarea name="description" class="border p-2 w-full mb-3">
-<%= movie.description %></textarea
-        >
-
-        <button type="submit" class="bg-blue-500 text-white px-4 py-2 rounded">
-          Update Movie
-        </button>
-      </form>
+<nav class="bg-slate-950/80 backdrop-blur-md sticky top-0 z-50 border-b border-white/10 px-8 py-4 flex justify-between items-center">
+    <a href="/api/movie" class="text-3xl font-extrabold bg-clip-text text-transparent bg-gradient-to-r from-rose-500 to-purple-600 tracking-tight">
+        MovieMania
+    </a>
+    <div class="flex gap-4">
+        <a href="/api/movie/movies" class="text-gray-300 hover:text-white font-medium transition-colors py-2 px-4">All Movies</a>
     </div>
-  </body>
+</nav>
+
+<main class="flex-grow container mx-auto px-6 py-12 flex justify-center items-center">
+    <div class="w-full max-w-2xl bg-slate-800/60 backdrop-blur-lg rounded-2xl shadow-2xl shadow-black/50 border border-white/10 p-10">
+        
+        <div class="text-center mb-10 flex flex-col items-center">
+            <img src="<%= movie.imgUrl %>" class="w-24 h-32 object-cover rounded-lg shadow-lg mb-4 border border-white/20">
+            <h1 class="text-4xl font-extrabold mb-2 text-white">Edit <%= movie.title %></h1>
+            <p class="text-slate-400">Update the movie's details.</p>
+        </div>
+
+        <form action="/api/movie/update/<%= movie._id %>" method="POST" class="space-y-6">
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div>
+                    <label class="block text-sm font-semibold text-slate-300 mb-2">Movie Title</label>
+                    <input type="text" name="title" value="<%= movie.title %>" required class="w-full bg-slate-900/50 border border-white/10 rounded-lg px-4 py-3 text-white placeholder-slate-500 focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition-all">
+                </div>
+                <div>
+                    <label class="block text-sm font-semibold text-slate-300 mb-2">Hero / Protagonist</label>
+                    <input type="text" name="hero" value="<%= movie.hero %>" required class="w-full bg-slate-900/50 border border-white/10 rounded-lg px-4 py-3 text-white placeholder-slate-500 focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition-all">
+                </div>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div>
+                    <label class="block text-sm font-semibold text-slate-300 mb-2">Cast (Comma separated)</label>
+                    <input type="text" name="cast" value="<%= movie.cast %>" required class="w-full bg-slate-900/50 border border-white/10 rounded-lg px-4 py-3 text-white placeholder-slate-500 focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition-all">
+                </div>
+                <div>
+                    <label class="block text-sm font-semibold text-slate-300 mb-2">Duration (Minutes)</label>
+                    <input type="number" name="duration" value="<%= movie.duration %>" required class="w-full bg-slate-900/50 border border-white/10 rounded-lg px-4 py-3 text-white placeholder-slate-500 focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition-all">
+                </div>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div>
+                    <label class="block text-sm font-semibold text-slate-300 mb-2">Poster Image URL</label>
+                    <input type="url" name="imgUrl" value="<%= movie.imgUrl %>" required class="w-full bg-slate-900/50 border border-white/10 rounded-lg px-4 py-3 text-white placeholder-slate-500 focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition-all">
+                </div>
+                <div>
+                    <label class="block text-sm font-semibold text-slate-300 mb-2">Trailer URL (YouTube Embed)</label>
+                    <input type="url" name="trailerMp4" value="<%= movie.trailerMp4 %>" class="w-full bg-slate-900/50 border border-white/10 rounded-lg px-4 py-3 text-white placeholder-slate-500 focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition-all">
+                </div>
+            </div>
+
+            <div>
+                <label class="block text-sm font-semibold text-slate-300 mb-2">Synopsis / Description</label>
+                <textarea name="description" rows="5" required class="w-full bg-slate-900/50 border border-white/10 rounded-lg px-4 py-3 text-white placeholder-slate-500 focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition-all resize-none"><%= movie.description %></textarea>
+            </div>
+
+            <button type="submit" class="w-full bg-blue-600 hover:bg-blue-500 shadow-[0_0_20px_rgba(37,99,235,0.4)] transition-all py-4 rounded-lg text-white font-bold text-lg mt-4">
+                Save Changes
+            </button>
+            
+        </form>
+    </div>
+</main>
+
+</body>
 </html>

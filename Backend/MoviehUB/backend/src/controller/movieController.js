@@ -42,10 +42,36 @@ async function updateMovie(req, res) {
   res.redirect("/api/movie/movies");
 }
 
+async function addMoviePage(req, res) {
+  res.render("addMovie");
+}
+
+async function addMovie(req, res) {
+  const { title, hero, cast, duration, description, imgUrl, trailerMp4 } = req.body;
+  await movieModel.create({
+    title,
+    hero,
+    cast,
+    duration,
+    description,
+    imgUrl,
+    trailerMp4
+  });
+  res.redirect("/api/movie/movies");
+}
+
+async function deleteMovie(req, res) {
+  await movieModel.findByIdAndDelete(req.params.id);
+  res.redirect("/api/movie/movies");
+}
+
 export default {
   movieGetAll,
   movieGet,
   editMoviePage,
   updateMovie,
   homePage,
-};
+  addMoviePage,
+  addMovie,
+  deleteMovie
+};

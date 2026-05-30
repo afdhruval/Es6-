@@ -1,51 +1,68 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-  <script src="https://cdn.tailwindcss.com"></script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MovieMania - All Movies</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Outfit', sans-serif; background-color: #0f172a; }
+        .movie-card:hover img { transform: scale(1.05); }
+    </style>
 </head>
-<body>
+<body class="text-white min-h-screen">
 
-<h1 class="text-4xl font-bold text-center my-5">
-  MovieMania
-</h1>
-
-<div class="grid grid-cols-3 gap-5 p-5">
-
-<% movies.forEach(movie => { %>
-
-<div class="border rounded p-4">
-
-  <h2 class="text-2xl font-bold">
-    <%= movie.title %>
-  </h2>
-
-  <p>
-    <%= movie.hero %>
-  </p>
-
-  <div class="flex gap-2 mt-4">
-
-    <a
-      href="/api/movie/movie/<%= movie._id %>"
-      class="bg-blue-500 text-white px-4 py-2 rounded"
-    >
-      View
+<nav class="bg-slate-950/80 backdrop-blur-md sticky top-0 z-50 border-b border-white/10 px-8 py-4 flex justify-between items-center">
+    <a href="/api/movie" class="text-3xl font-extrabold bg-clip-text text-transparent bg-gradient-to-r from-rose-500 to-purple-600 tracking-tight">
+        MovieMania
     </a>
+    <div class="flex gap-4">
+        <a href="/api/movie" class="text-gray-300 hover:text-white font-medium transition-colors py-2 px-4">Home</a>
+        <a href="/api/movie/add" class="bg-rose-600 hover:bg-rose-500 transition-colors shadow-[0_0_15px_rgba(225,29,72,0.5)] px-5 py-2 rounded-full text-white font-semibold flex items-center gap-2">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+              <path fill-rule="evenodd" d="M10 3a1 1 0 011 1v5h5a1 1 0 110 2h-5v5a1 1 0 11-2 0v-5H4a1 1 0 110-2h5V4a1 1 0 011-1z" clip-rule="evenodd" />
+            </svg>
+            Add Movie
+        </a>
+    </div>
+</nav>
 
-    <a
-      href="/api/movie/movie/edit/<%= movie._id %>"
-      class="bg-green-500 text-white px-4 py-2 rounded"
-    >
-      Edit
-    </a>
+<main class="container mx-auto px-6 py-12">
+    <div class="mb-12">
+        <h1 class="text-5xl font-extrabold mb-2 text-white">All Movies Library</h1>
+        <p class="text-slate-400 text-lg">Browse your entire collection, edit or remove entries.</p>
+    </div>
 
-  </div>
-
-</div>
-
-<% }) %>
-
-</div>
+    <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-8">
+        <% movies.forEach(movie => { %>
+        <div class="movie-card group flex flex-col rounded-2xl overflow-hidden shadow-lg bg-slate-800/50 border border-white/5 backdrop-blur-sm transition-all duration-300 hover:border-white/20 hover:shadow-2xl">
+            <div class="relative aspect-[2/3] overflow-hidden cursor-pointer" onclick="window.location.href='/api/movie/movie/<%= movie._id %>'">
+                <img src="<%= movie.imgUrl %>" alt="<%= movie.title %>" class="w-full h-full object-cover transition-transform duration-700 ease-out">
+                <div class="absolute inset-0 bg-gradient-to-t from-slate-900 to-transparent opacity-80"></div>
+                <div class="absolute bottom-0 w-full p-4">
+                    <h2 class="text-xl font-bold text-white mb-1 leading-tight"><%= movie.title %></h2>
+                    <p class="text-rose-400 font-medium text-sm truncate"><%= movie.hero %></p>
+                </div>
+            </div>
+            
+            <div class="p-4 flex gap-2 bg-slate-800/80 mt-auto">
+                <a href="/api/movie/movie/<%= movie._id %>" class="flex-1 bg-white/10 hover:bg-white/20 text-white py-2 rounded text-center text-sm font-semibold transition-colors">
+                    View
+                </a>
+                <a href="/api/movie/movie/edit/<%= movie._id %>" class="flex-1 bg-blue-600/80 hover:bg-blue-500 text-white py-2 rounded text-center text-sm font-semibold transition-colors">
+                    Edit
+                </a>
+                <form action="/api/movie/delete/<%= movie._id %>" method="POST" class="inline m-0 p-0 flex-1" onsubmit="return confirm('Are you sure you want to delete this movie?');">
+                    <button type="submit" class="w-full h-full bg-red-600/80 hover:bg-red-500 text-white py-2 rounded text-center text-sm font-semibold transition-colors">
+                        Delete
+                    </button>
+                </form>
+            </div>
+        </div>
+        <% }) %>
+    </div>
+</main>
 
 </body>
 </html>
