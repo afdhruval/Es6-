@@ -8,6 +8,18 @@
     <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&display=swap" rel="stylesheet">
     <style>
         body { font-family: 'Outfit', sans-serif; background-color: #0f172a; }
+
+        /* Custom file input styling */
+        .file-drop-zone {
+            border: 2px dashed rgba(255,255,255,0.15);
+            transition: border-color 0.2s, background-color 0.2s;
+        }
+        .file-drop-zone:hover, .file-drop-zone.dragover {
+            border-color: #f43f5e;
+            background-color: rgba(244,63,94,0.05);
+        }
+        #preview-img { display: none; }
+        #preview-img.visible { display: block; }
     </style>
 </head>
 <body class="text-white min-h-screen selection:bg-rose-500 selection:text-white flex flex-col">
@@ -29,7 +41,8 @@
             <p class="text-slate-400">Fill in the details to expand your collection.</p>
         </div>
 
-        <form action="/api/movie/add" method="POST" class="space-y-6">
+        <!-- enctype MUST be multipart/form-data for file upload -->
+        <form action="/api/movie/add" method="POST" enctype="multipart/form-data" class="space-y-6">
             
             <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div>
@@ -53,15 +66,41 @@
                 </div>
             </div>
 
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                <div>
-                    <label class="block text-sm font-semibold text-slate-300 mb-2">Poster Image URL</label>
-                    <input type="url" name="imgUrl" required class="w-full bg-slate-900/50 border border-white/10 rounded-lg px-4 py-3 text-white placeholder-slate-500 focus:outline-none focus:border-rose-500 focus:ring-1 focus:ring-rose-500 transition-all" placeholder="https://example.com/poster.jpg">
+            <!-- ─── Poster Image ─────────────────────────────────────────────── -->
+            <div class="space-y-3">
+                <label class="block text-sm font-semibold text-slate-300">
+                    Poster Image
+                    <span class="text-slate-500 font-normal ml-1">(upload a file OR paste a URL below)</span>
+                </label>
+
+                <!-- File drop zone -->
+                <label id="drop-zone" for="poster-file" class="file-drop-zone flex flex-col items-center justify-center gap-3 rounded-xl px-4 py-8 cursor-pointer bg-slate-900/40">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-10 w-10 text-slate-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12"/>
+                    </svg>
+                    <span class="text-slate-400 text-sm">Drag & drop or <span class="text-rose-400 font-semibold">click to upload</span></span>
+                    <span class="text-slate-600 text-xs">JPG, PNG, WEBP, GIF · max 5 MB</span>
+                    <input id="poster-file" type="file" name="poster" accept="image/*" class="hidden" onchange="previewPoster(this)">
+                </label>
+
+                <!-- Image preview -->
+                <img id="preview-img" src="" alt="Poster preview" class="w-28 rounded-lg border border-white/10 shadow-md mx-auto">
+
+                <!-- URL fallback -->
+                <div class="flex items-center gap-3">
+                    <span class="text-slate-500 text-xs shrink-0">or URL:</span>
+                    <input type="url" name="imgUrl" id="imgUrlInput" class="flex-1 bg-slate-900/50 border border-white/10 rounded-lg px-4 py-2 text-white placeholder-slate-500 focus:outline-none focus:border-rose-500 focus:ring-1 focus:ring-rose-500 transition-all text-sm" placeholder="https://example.com/poster.jpg">
                 </div>
-                <div>
-                    <label class="block text-sm font-semibold text-slate-300 mb-2">Trailer URL (YouTube Embed)</label>
-                    <input type="url" name="trailerMp4" class="w-full bg-slate-900/50 border border-white/10 rounded-lg px-4 py-3 text-white placeholder-slate-500 focus:outline-none focus:border-rose-500 focus:ring-1 focus:ring-rose-500 transition-all" placeholder="https://www.youtube.com/embed/...">
-                </div>
+            </div>
+
+            <!-- ─── Trailer ──────────────────────────────────────────────────── -->
+            <div>
+                <label class="block text-sm font-semibold text-slate-300 mb-2">
+                    Trailer Link
+                    <span class="text-slate-500 font-normal ml-1">(YouTube URL or embed link)</span>
+                </label>
+                <input type="url" name="trailerMp4" class="w-full bg-slate-900/50 border border-white/10 rounded-lg px-4 py-3 text-white placeholder-slate-500 focus:outline-none focus:border-rose-500 focus:ring-1 focus:ring-rose-500 transition-all" placeholder="https://www.youtube.com/watch?v=... or embed link">
+                <p class="text-xs text-slate-500 mt-1">Paste a regular YouTube link or an embed link — both work.</p>
             </div>
 
             <div>
@@ -76,6 +115,32 @@
         </form>
     </div>
 </main>
+
+<script>
+    function previewPoster(input) {
+        const img = document.getElementById('preview-img');
+        const urlInput = document.getElementById('imgUrlInput');
+
+        if (input.files && input.files[0]) {
+            const reader = new FileReader();
+            reader.onload = e => {
+                img.src = e.target.result;
+                img.classList.add('visible');
+                // Clear URL field so controller uses the file
+                urlInput.value = '';
+            };
+            reader.readAsDataURL(input.files[0]);
+        } else {
+            img.classList.remove('visible');
+        }
+    }
+
+    // Drag-over visual feedback
+    const dz = document.getElementById('drop-zone');
+    dz.addEventListener('dragover', e => { e.preventDefault(); dz.classList.add('dragover'); });
+    dz.addEventListener('dragleave', () => dz.classList.remove('dragover'));
+    dz.addEventListener('drop', () => dz.classList.remove('dragover'));
+</script>
 
 </body>
 </html>
