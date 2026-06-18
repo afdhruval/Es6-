@@ -1,0 +1,75 @@
+<%- include('./partials/header') %>
+
+<!-- Hero Section -->
+<section class="relative pt-24 pb-20 text-center px-4 border-b border-white/5 bg-gradient-to-b from-primary/5 to-transparent">
+  <div class="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-accent/10 border border-accent/20 text-accent text-xs font-bold uppercase tracking-wider mb-8">
+    <span class="w-1.5 h-1.5 rounded-full bg-accent animate-pulse"></span>
+    Welcome to the Future
+  </div>
+  
+  <h1 class="font-serif text-5xl md:text-7xl font-bold tracking-tight mb-6 max-w-4xl mx-auto leading-tight">
+    Unleash your ideas into <br/>
+    <span class="text-gradient">the digital canvas</span>
+  </h1>
+  
+  <p class="text-gray-400 text-lg max-w-2xl mx-auto mb-10 leading-relaxed">
+    Discover stories, thinking, and expertise from writers on any topic. A highly aesthetic space designed for modern readers.
+  </p>
+</section>
+
+<!-- Blog Grid -->
+<div class="max-w-7xl mx-auto px-6 py-20">
+  <div class="flex items-center justify-between mb-12">
+    <h2 class="text-2xl font-bold tracking-tight">Latest Masterpieces</h2>
+  </div>
+
+  <% if (blogs.length === 0) { %>
+    <div class="text-center py-20 glass-card">
+      <i class="fa-solid fa-ghost text-6xl text-gray-600 mb-6 block"></i>
+      <h3 class="text-xl font-bold text-gray-300 mb-2">It's quiet here</h3>
+      <p class="text-gray-500 mb-6">Be the first to share your thoughts.</p>
+      <% if (user) { %>
+        <a href="/blog/new" class="btn-primary">Write a Story</a>
+      <% } else { %>
+        <a href="/auth/login" class="btn-secondary">Sign in to Write</a>
+      <% } %>
+    </div>
+  <% } else { %>
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+      <% blogs.forEach(blog => { %>
+        <a href="/blog/<%= blog._id %>" class="glass-card group flex flex-col overflow-hidden">
+          <div class="h-56 overflow-hidden relative">
+            <img src="<%= blog.images || 'https://images.unsplash.com/photo-1550745165-9bc0b252726f?auto=format&fit=crop&q=80&w=1000' %>" 
+                 alt="<%= blog.title %>" 
+                 class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105" />
+            <div class="absolute inset-0 bg-gradient-to-t from-[#07070f] via-transparent to-transparent opacity-80"></div>
+          </div>
+          
+          <div class="p-6 flex flex-col flex-1">
+            <div class="flex items-center gap-2 mb-4">
+              <span class="px-3 py-1 text-[10px] font-bold uppercase tracking-wider text-accent bg-accent/10 border border-accent/20 rounded-full">
+                <%= blog.category %>
+              </span>
+            </div>
+            
+            <h3 class="text-xl font-bold leading-snug mb-3 group-hover:text-primary transition-colors line-clamp-2">
+              <%= blog.title %>
+            </h3>
+            
+            <p class="text-gray-400 text-sm leading-relaxed line-clamp-3 mb-6 flex-1">
+              <%= blog.content %>
+            </p>
+            
+            <div class="pt-4 border-t border-white/10 flex items-center justify-between text-sm">
+              <span class="text-primary font-bold group-hover:translate-x-1 transition-transform inline-flex items-center gap-2">
+                Read Story <i class="fa-solid fa-arrow-right-long"></i>
+              </span>
+            </div>
+          </div>
+        </a>
+      <% }) %>
+    </div>
+  <% } %>
+</div>
+
+<%- include('./partials/footer') %>
