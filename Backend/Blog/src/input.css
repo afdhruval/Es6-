@@ -1,60 +1,7 @@
 @import "tailwindcss";
 
-@theme {
-  --color-primary: #7c3aed;
-  --color-primary-light: #9d5ff5;
-  --color-primary-dark: #5b21b6;
-  --color-accent: #a855f7;
-  --color-bg-main: #07070f;
-  --color-bg-card: rgba(255, 255, 255, 0.04);
-  --color-bg-card-hover: rgba(255, 255, 255, 0.07);
-  --color-border-subtle: rgba(255, 255, 255, 0.08);
-  --font-sans: 'Inter', sans-serif;
-  --font-serif: 'Playfair Display', serif;
-}
-
 @layer base {
   body {
-    @apply bg-[var(--color-bg-main)] text-gray-200 antialiased font-sans min-h-screen selection:bg-primary selection:text-white;
+    @apply bg-white text-black antialiased font-sans selection:bg-black selection:text-white;
   }
-}
-
-@layer components {
-  .glass-card {
-    @apply bg-[var(--color-bg-card)] backdrop-blur-md border border-[var(--color-border-subtle)] rounded-2xl transition-all duration-300;
-  }
-  
-  .glass-card:hover {
-    @apply bg-[var(--color-bg-card-hover)] border-primary/50 shadow-[0_0_20px_rgba(124,58,237,0.15)] -translate-y-1;
-  }
-
-  .btn-primary {
-    @apply inline-flex items-center justify-center gap-2 px-6 py-2.5 rounded-full font-semibold text-white bg-gradient-to-r from-primary to-indigo-600 shadow-[0_0_15px_rgba(124,58,237,0.3)] hover:shadow-[0_0_25px_rgba(124,58,237,0.5)] hover:-translate-y-0.5 transition-all duration-300;
-  }
-  
-  .btn-secondary {
-    @apply inline-flex items-center justify-center gap-2 px-6 py-2.5 rounded-full font-semibold text-gray-200 bg-[var(--color-bg-card)] border border-[var(--color-border-subtle)] hover:bg-[var(--color-bg-card-hover)] hover:border-primary/50 transition-all duration-300;
-  }
-
-  .input-field {
-    @apply w-full px-4 py-3 bg-white/5 border border-white/10 rounded-xl text-gray-200 focus:outline-none focus:border-primary focus:ring-2 focus:ring-primary/20 transition-all duration-300 placeholder-gray-500;
-  }
-
-  .text-gradient {
-    @apply bg-gradient-to-r from-accent to-indigo-400 bg-clip-text text-transparent;
-  }
-}
-
-/* Background Animated Blobs */
-.bg-blob-1 {
-  @apply fixed w-[700px] h-[700px] bg-primary/10 rounded-full blur-[100px] -top-[250px] -left-[250px] pointer-events-none -z-10 animate-[blob_15s_infinite];
-}
-.bg-blob-2 {
-  @apply fixed w-[600px] h-[600px] bg-indigo-600/10 rounded-full blur-[100px] -bottom-[150px] -right-[150px] pointer-events-none -z-10 animate-[blob_18s_infinite_reverse];
-}
-
-@keyframes blob {
-  0%, 100% { transform: translate(0, 0) scale(1); }
-  33% { transform: translate(30px, -50px) scale(1.1); }
-  66% { transform: translate(-20px, 20px) scale(0.9); }
 }

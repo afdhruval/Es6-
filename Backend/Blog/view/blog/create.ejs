@@ -1,56 +1,52 @@
 <%- include('../partials/header') %>
 
-<div class="max-w-4xl mx-auto px-6 py-20">
-  <div class="glass-card p-10 md:p-14 border-t-4 border-t-primary relative overflow-hidden">
-    <!-- Decor element -->
-    <div class="absolute -top-24 -right-24 w-64 h-64 bg-primary/20 rounded-full blur-[80px] pointer-events-none"></div>
+<div class="max-w-3xl mx-auto px-6 py-20">
+  
+  <div class="mb-12 border-b border-black pb-6">
+    <h1 class="text-4xl font-black uppercase tracking-tight mb-2">Write a Post</h1>
+    <p class="text-gray-500">Publish your story to the world.</p>
+  </div>
 
-    <div class="mb-10 relative z-10">
-      <h1 class="text-3xl font-bold font-serif mb-2 tracking-tight">Draft a New Masterpiece</h1>
-      <p class="text-gray-400">Share your thoughts, experiences, and expertise with the world.</p>
+  <% if (error) { %>
+    <div class="bg-black text-white px-4 py-3 mb-8 text-sm font-medium uppercase tracking-wider text-center">
+      <%= error %>
+    </div>
+  <% } %>
+
+  <form action="/blog" method="POST" class="space-y-8">
+    
+    <div>
+      <label class="block text-xs font-bold uppercase tracking-widest mb-2">Title</label>
+      <input type="text" name="title" required class="input-clean w-full px-4 py-3 text-lg font-bold" />
+    </div>
+    
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+      <div>
+        <label class="block text-xs font-bold uppercase tracking-widest mb-2">Category</label>
+        <input type="text" name="category" required class="input-clean w-full px-4 py-3" />
+      </div>
+      
+      <div>
+        <label class="block text-xs font-bold uppercase tracking-widest mb-2">Cover Image URL</label>
+        <input type="url" name="images" class="input-clean w-full px-4 py-3" />
+      </div>
     </div>
 
-    <% if (error) { %>
-      <div class="bg-red-500/10 border border-red-500/20 text-red-400 px-4 py-3 rounded-xl mb-8 flex items-center gap-3">
-        <i class="fa-solid fa-circle-exclamation"></i>
-        <span><%= error %></span>
-      </div>
-    <% } %>
+    <div>
+      <label class="block text-xs font-bold uppercase tracking-widest mb-2">Content</label>
+      <textarea name="content" required class="input-clean w-full px-4 py-4 min-h-[400px] resize-y leading-relaxed text-lg"></textarea>
+    </div>
 
-    <form action="/blog" method="POST" class="space-y-8 relative z-10">
-      
-      <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
-        <div class="space-y-3">
-          <label class="block text-sm font-semibold text-gray-300 uppercase tracking-wider">Title</label>
-          <input type="text" name="title" required placeholder="Enter a captivating title" class="input-field" />
-        </div>
-        
-        <div class="space-y-3">
-          <label class="block text-sm font-semibold text-gray-300 uppercase tracking-wider">Category</label>
-          <input type="text" name="category" required placeholder="e.g. Technology, Lifestyle" class="input-field" />
-        </div>
-      </div>
+    <div class="pt-6 flex gap-4">
+      <button type="submit" class="btn-solid flex-1 py-4 font-bold uppercase tracking-widest text-sm">
+        Publish
+      </button>
+      <a href="/" class="btn-outline px-8 py-4 font-bold uppercase tracking-widest text-sm text-center">
+        Cancel
+      </a>
+    </div>
 
-      <div class="space-y-3">
-        <label class="block text-sm font-semibold text-gray-300 uppercase tracking-wider">Cover Image URL (Optional)</label>
-        <input type="url" name="images" placeholder="https://example.com/image.jpg" class="input-field" />
-        <p class="text-xs text-gray-500 mt-1">Leave blank to use a default aesthetic cover.</p>
-      </div>
-
-      <div class="space-y-3">
-        <label class="block text-sm font-semibold text-gray-300 uppercase tracking-wider">Content</label>
-        <textarea name="content" required placeholder="Tell your story..." class="input-field min-h-[300px] resize-y leading-relaxed"></textarea>
-      </div>
-
-      <div class="pt-6 flex items-center justify-end gap-4 border-t border-white/10">
-        <a href="/" class="btn-secondary">Cancel</a>
-        <button type="submit" class="btn-primary">
-          Publish Story <i class="fa-solid fa-paper-plane ml-1"></i>
-        </button>
-      </div>
-
-    </form>
-  </div>
+  </form>
 </div>
 
 <%- include('../partials/footer') %>

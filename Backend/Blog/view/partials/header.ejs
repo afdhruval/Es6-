@@ -3,59 +3,92 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title><%= typeof title !== 'undefined' ? title + ' | InkFlow' : 'InkFlow Blog' %></title>
+  <title><%= typeof title !== 'undefined' ? title + ' | BLOGGY' : 'BLOGGY' %></title>
   
-  <!-- Google Fonts -->
+  <!-- Fonts -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Playfair+Display:ital,wght@0,700;1,700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Jost:wght@400;500;600;700;800&display=swap" rel="stylesheet">
   
   <!-- FontAwesome -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   
   <!-- Tailwind CSS Output -->
-  <link rel="stylesheet" href="/css/style.css">
+  <link rel="stylesheet" href="/css/tailwind.css">
+  <style>
+    body { font-family: 'Jost', sans-serif; }
+    .nav-link { position: relative; }
+    .nav-link::after {
+      content: '';
+      position: absolute;
+      width: 0;
+      height: 1px;
+      bottom: -2px;
+      left: 0;
+      background-color: black;
+      transition: width 0.3s ease;
+    }
+    .nav-link:hover::after { width: 100%; }
+    
+    .btn-solid {
+      background-color: black;
+      color: white;
+      transition: background-color 0.3s ease;
+    }
+    .btn-solid:hover { background-color: #333; }
+    
+    .btn-outline {
+      border: 1px solid black;
+      color: black;
+      background-color: transparent;
+      transition: all 0.3s ease;
+    }
+    .btn-outline:hover {
+      background-color: black;
+      color: white;
+    }
+    
+    .input-clean {
+      border: 1px solid #e5e7eb;
+      background: #fafafa;
+      transition: border-color 0.3s ease;
+    }
+    .input-clean:focus {
+      outline: none;
+      border-color: black;
+    }
+  </style>
 </head>
-<body class="relative overflow-x-hidden">
-
-  <!-- Background Blobs -->
-  <div class="bg-blob-1"></div>
-  <div class="bg-blob-2"></div>
+<body class="bg-white text-black">
 
   <!-- Navbar -->
-  <nav class="sticky top-0 z-50 bg-[#07070f]/80 backdrop-blur-xl border-b border-white/10">
-    <div class="max-w-7xl mx-auto px-6 h-20 flex items-center justify-between">
+  <nav class="sticky top-0 z-50 bg-white border-b border-gray-200">
+    <div class="max-w-7xl mx-auto px-6 h-16 flex items-center justify-between">
       
+      <!-- Desktop Nav Left -->
+      <div class="hidden md:flex items-center gap-6 text-sm font-semibold uppercase tracking-wider">
+        <a href="/" class="nav-link">Home</a>
+      </div>
+
       <!-- Logo -->
-      <a href="/" class="flex items-center gap-3 group">
-        <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-primary to-indigo-500 shadow-[0_0_15px_rgba(124,58,237,0.4)] flex items-center justify-center text-white font-bold text-lg group-hover:scale-105 transition-transform duration-300">
-          <i class="fa-solid fa-pen-nib"></i>
-        </div>
-        <span class="text-2xl font-black tracking-tight text-gradient font-serif">InkFlow</span>
+      <a href="/" class="flex-1 flex justify-center md:flex-none">
+        <span class="text-3xl font-black tracking-widest uppercase">BLOGGY</span>
       </a>
 
-      <!-- Desktop Nav -->
-      <div class="hidden md:flex items-center gap-8">
-        <a href="/" class="text-sm font-medium text-gray-400 hover:text-white transition-colors duration-200">Explore</a>
-        
+      <!-- Desktop Nav Right -->
+      <div class="hidden md:flex items-center gap-6 text-sm font-semibold uppercase tracking-wider">
         <% if (user) { %>
-          <a href="/blog/new" class="text-sm font-medium text-gray-400 hover:text-white transition-colors duration-200">Write</a>
-          <div class="flex items-center gap-4 border-l border-white/10 pl-8">
-            <div class="flex items-center gap-2 text-sm text-gray-300 bg-white/5 py-1.5 px-4 rounded-full border border-white/10">
-              <i class="fa-regular fa-user text-accent"></i>
-              <span class="font-medium"><%= user.username %></span>
-            </div>
-            <a href="/auth/logout" class="btn-secondary !py-1.5 !px-4 !text-sm">Logout</a>
+          <a href="/blog/new" class="nav-link">Write</a>
+          <div class="flex items-center gap-2 border-l border-gray-300 pl-6">
+            <span><%= user.username %></span>
           </div>
+          <a href="/auth/logout" class="nav-link text-gray-500">Logout</a>
         <% } else { %>
-          <div class="flex items-center gap-4 border-l border-white/10 pl-8">
-            <a href="/auth/login" class="text-sm font-medium text-gray-300 hover:text-white transition-colors duration-200">Sign In</a>
-            <a href="/auth/register" class="btn-primary !py-2 !px-5 !text-sm">Get Started</a>
-          </div>
+          <a href="/auth/login" class="nav-link">Login</a>
         <% } %>
       </div>
 
     </div>
   </nav>
 
-  <main class="min-h-[calc(100vh-160px)]">
+  <main class="min-h-[calc(100vh-200px)]">
