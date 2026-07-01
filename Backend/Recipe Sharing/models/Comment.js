@@ -7,7 +7,7 @@ const commentSchema = new mongoose.Schema({
   },
   author: {
     type: mongoose.Schema.Types.ObjectId,
-    ref: 'User',
+    ref: 'Usersssss',
     required: true,
   },
   recipe: {
