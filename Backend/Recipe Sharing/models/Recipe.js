@@ -7,7 +7,7 @@ const recipeSchema = new mongoose.Schema({
   },
   ingredients: {
     type: String,
-    required: true, 
+    required: true,
   },
   instructions: {
     type: String,
@@ -26,7 +26,7 @@ const recipeSchema = new mongoose.Schema({
     {
       type: mongoose.Schema.Types.ObjectId,
       ref: 'Comment',
-    },   
+    },
   ],
 }, { timestamps: true });
 
