@@ -1,0 +1,27 @@
+<%- include('partials/header') %>
+
+<section class="hero">
+  <div class="hero-content">
+    <h2>Discover Exquisite Recipes</h2>
+    <p>Explore a world of flavors crafted by our culinary community.</p>
+  </div>
+</section>
+
+<section class="recipe-grid">
+  <% if (recipes.length > 0) { %>
+    <% recipes.forEach(recipe => { %>
+      <div class="recipe-card">
+        <img src="<%= recipe.imageUrl %>" alt="<%= recipe.title %>" class="recipe-img">
+        <div class="recipe-card-content">
+          <h3><%= recipe.title %></h3>
+          <p class="recipe-author">By <%= recipe.author ? recipe.author.username : 'Unknown' %></p>
+          <a href="/recipes/<%= recipe._id %>" class="btn btn-secondary">View Recipe</a>
+        </div>
+      </div>
+    <% }) %>
+  <% } else { %>
+    <p class="no-recipes">No recipes found. Be the first to share one!</p>
+  <% } %>
+</section>
+
+<%- include('partials/footer') %>

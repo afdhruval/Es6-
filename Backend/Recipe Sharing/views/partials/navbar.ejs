@@ -1,0 +1,17 @@
+<nav class="navbar">
+  <div class="nav-brand">
+    <a href="/"><h1>Culinary Delights</h1></a>
+  </div>
+  <ul class="nav-links">
+    <li><a href="/recipes">Recipes</a></li>
+    <% if (user) { %>
+      <li><a href="/my-recipes">My Recipes</a></li>
+      <li><a href="/recipes/new" class="btn">New Recipe</a></li>
+      <li><span class="user-greeting">Welcome, <%= user.username %></span></li>
+      <li><a href="/logout">Logout</a></li>
+    <% } else { %>
+      <li><a href="/login">Login</a></li>
+      <li><a href="/register" class="btn">Register</a></li>
+    <% } %>
+  </ul>
+</nav>

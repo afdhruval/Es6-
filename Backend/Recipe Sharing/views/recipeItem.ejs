@@ -1,0 +1,49 @@
+<%- include('partials/header') %>
+
+<article class="recipe-details">
+  <div class="recipe-header">
+    <img src="<%= recipe.imageUrl %>" alt="<%= recipe.title %>" class="recipe-cover">
+    <div class="recipe-title-box">
+      <h2><%= recipe.title %></h2>
+      <p class="recipe-meta">By <%= recipe.author ? recipe.author.username : 'Unknown' %> | Published <%= new Date(recipe.createdAt).toLocaleDateString() %></p>
+    </div>
+  </div>
+  
+  <div class="recipe-body">
+    <div class="recipe-ingredients">
+      <h3>Ingredients</h3>
+      <p style="white-space: pre-wrap;"><%= recipe.ingredients %></p>
+    </div>
+    <div class="recipe-instructions">
+      <h3>Instructions</h3>
+      <p style="white-space: pre-wrap;"><%= recipe.instructions %></p>
+    </div>
+  </div>
+</article>
+
+<section class="comments-section">
+  <h3>Comments</h3>
+  <% if (user) { %>
+    <form action="/recipes/<%= recipe._id %>/comments" method="POST" class="comment-form">
+      <textarea name="text" rows="3" required placeholder="Add a comment..."></textarea>
+      <button type="submit" class="btn btn-secondary">Post Comment</button>
+    </form>
+  <% } else { %>
+    <p><a href="/login">Log in</a> to post a comment.</p>
+  <% } %>
+
+  <div class="comments-list">
+    <% if (recipe.comments && recipe.comments.length > 0) { %>
+      <% recipe.comments.forEach(comment => { %>
+        <div class="comment-card">
+          <p class="comment-author"><%= comment.author ? comment.author.username : 'Unknown' %> <span class="comment-date"><%= new Date(comment.createdAt).toLocaleDateString() %></span></p>
+          <p class="comment-text"><%= comment.text %></p>
+        </div>
+      <% }) %>
+    <% } else { %>
+      <p>No comments yet. Be the first!</p>
+    <% } %>
+  </div>
+</section>
+
+<%- include('partials/footer') %>

@@ -1,0 +1,24 @@
+<%- include('partials/header') %>
+
+<section class="my-recipes-header">
+  <h2>My Recipes</h2>
+  <a href="/recipes/new" class="btn btn-primary">Create New Recipe</a>
+</section>
+
+<section class="recipe-grid">
+  <% if (recipes && recipes.length > 0) { %>
+    <% recipes.forEach(recipe => { %>
+      <div class="recipe-card">
+        <img src="<%= recipe.imageUrl %>" alt="<%= recipe.title %>" class="recipe-img">
+        <div class="recipe-card-content">
+          <h3><%= recipe.title %></h3>
+          <a href="/recipes/<%= recipe._id %>" class="btn btn-secondary">View Recipe</a>
+        </div>
+      </div>
+    <% }) %>
+  <% } else { %>
+    <p class="no-recipes">You haven't shared any recipes yet.</p>
+  <% } %>
+</section>
+
+<%- include('partials/footer') %>
