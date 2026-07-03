@@ -1,0 +1,57 @@
+<% if (flash) { %>
+  <% if (flash.success && flash.success.length) { %>
+    <div class="flash-message flex items-start gap-3 bg-emerald-500/10 border border-emerald-500/30 text-emerald-300 rounded-xl px-4 py-3 mb-3 animate-fadeIn" role="alert">
+      <i class="fa-solid fa-circle-check mt-0.5 text-emerald-400"></i>
+      <div class="flex-1">
+        <% flash.success.forEach(msg => { %>
+          <p class="text-sm"><%= msg %></p>
+        <% }); %>
+      </div>
+      <button onclick="this.parentElement.remove()" class="text-emerald-400 hover:text-emerald-200 ml-2">
+        <i class="fa-solid fa-xmark text-sm"></i>
+      </button>
+    </div>
+  <% } %>
+
+  <% if (flash.error && flash.error.length) { %>
+    <div class="flash-message flex items-start gap-3 bg-red-500/10 border border-red-500/30 text-red-300 rounded-xl px-4 py-3 mb-3 animate-fadeIn" role="alert">
+      <i class="fa-solid fa-circle-exclamation mt-0.5 text-red-400"></i>
+      <div class="flex-1">
+        <% flash.error.forEach(msg => { %>
+          <p class="text-sm"><%= msg %></p>
+        <% }); %>
+      </div>
+      <button onclick="this.parentElement.remove()" class="text-red-400 hover:text-red-200 ml-2">
+        <i class="fa-solid fa-xmark text-sm"></i>
+      </button>
+    </div>
+  <% } %>
+
+  <% if (flash.warning && flash.warning.length) { %>
+    <div class="flash-message flex items-start gap-3 bg-amber-500/10 border border-amber-500/30 text-amber-300 rounded-xl px-4 py-3 mb-3 animate-fadeIn" role="alert">
+      <i class="fa-solid fa-triangle-exclamation mt-0.5 text-amber-400"></i>
+      <div class="flex-1">
+        <% flash.warning.forEach(msg => { %>
+          <p class="text-sm"><%= msg %></p>
+        <% }); %>
+      </div>
+      <button onclick="this.parentElement.remove()" class="text-amber-400 hover:text-amber-200 ml-2">
+        <i class="fa-solid fa-xmark text-sm"></i>
+      </button>
+    </div>
+  <% } %>
+
+  <% if (flash.info && flash.info.length) { %>
+    <div class="flash-message flex items-start gap-3 bg-blue-500/10 border border-blue-500/30 text-blue-300 rounded-xl px-4 py-3 mb-3 animate-fadeIn" role="alert">
+      <i class="fa-solid fa-circle-info mt-0.5 text-blue-400"></i>
+      <div class="flex-1">
+        <% flash.info.forEach(msg => { %>
+          <p class="text-sm"><%= msg %></p>
+        <% }); %>
+      </div>
+      <button onclick="this.parentElement.remove()" class="text-blue-400 hover:text-blue-200 ml-2">
+        <i class="fa-solid fa-xmark text-sm"></i>
+      </button>
+    </div>
+  <% } %>
+<% } %>
