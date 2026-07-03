@@ -1,0 +1,82 @@
+<!-- Breadcrumb -->
+<div class="flex items-center gap-2 text-sm text-slate-500 mb-6">
+  <a href="/teachers" class="hover:text-white transition-colors">Teachers</a>
+  <i class="fa-solid fa-chevron-right text-xs"></i>
+  <span class="text-slate-300">Edit: <%= teacher.name %></span>
+</div>
+
+<div class="max-w-2xl">
+  <div class="bg-slate-800 border border-slate-700/50 rounded-2xl overflow-hidden">
+    <div class="px-6 py-5 border-b border-slate-700/50">
+      <h2 class="text-base font-semibold text-white">Edit Teacher</h2>
+    </div>
+    <form method="POST" action="/teachers/<%= teacher._id %>" enctype="multipart/form-data" class="px-6 py-6 space-y-5">
+      <input type="hidden" name="_action" value="update" />
+
+      <div class="flex items-center gap-4">
+        <div id="avatar-preview" class="w-16 h-16 rounded-full overflow-hidden bg-slate-700 border-2 border-dashed border-slate-600 flex items-center justify-center">
+          <% if (teacher.avatar) { %>
+            <img src="<%= teacher.avatar %>" class="w-full h-full object-cover" />
+          <% } else { %>
+            <span class="text-xl font-bold text-slate-400"><%= teacher.name.charAt(0).toUpperCase() %></span>
+          <% } %>
+        </div>
+        <label class="cursor-pointer inline-flex items-center gap-2 bg-slate-700 hover:bg-slate-600 text-slate-300 text-sm font-medium px-4 py-2 rounded-xl transition-colors border border-slate-600">
+          <i class="fa-solid fa-upload text-xs"></i> Change Photo
+          <input type="file" name="avatar" accept="image/*" class="hidden" onchange="previewAvatar(this)" />
+        </label>
+      </div>
+
+      <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+        <div>
+          <label class="block text-sm font-medium text-slate-300 mb-1.5">Full Name <span class="text-red-400">*</span></label>
+          <input type="text" name="name" value="<%= teacher.name %>" required
+            class="w-full bg-slate-700/50 border border-slate-600 text-white rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:border-primary-500 transition-colors" />
+        </div>
+        <div>
+          <label class="block text-sm font-medium text-slate-300 mb-1.5">Email Address <span class="text-red-400">*</span></label>
+          <input type="email" name="email" value="<%= teacher.email %>" required
+            class="w-full bg-slate-700/50 border border-slate-600 text-white rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:border-primary-500 transition-colors" />
+        </div>
+      </div>
+
+      <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+        <div>
+          <label class="block text-sm font-medium text-slate-300 mb-1.5">Phone</label>
+          <input type="tel" name="phone" value="<%= teacher.phone %>"
+            class="w-full bg-slate-700/50 border border-slate-600 text-white rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:border-primary-500 transition-colors" />
+        </div>
+        <div>
+          <label class="block text-sm font-medium text-slate-300 mb-1.5">Specialization</label>
+          <input type="text" name="specialization" value="<%= teacher.specialization %>"
+            class="w-full bg-slate-700/50 border border-slate-600 text-white rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:border-primary-500 transition-colors" />
+        </div>
+      </div>
+
+      <div>
+        <label class="block text-sm font-medium text-slate-300 mb-1.5">Bio</label>
+        <textarea name="bio" rows="3"
+          class="w-full bg-slate-700/50 border border-slate-600 text-white rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:border-primary-500 transition-colors resize-none"><%= teacher.bio %></textarea>
+      </div>
+
+      <div class="flex items-center gap-3 pt-2">
+        <button type="submit" class="bg-primary-600 hover:bg-primary-700 text-white text-sm font-semibold px-6 py-2.5 rounded-xl transition-all duration-200 flex items-center gap-2">
+          <i class="fa-solid fa-floppy-disk"></i> Save Changes
+        </button>
+        <a href="/teachers" class="bg-slate-700 hover:bg-slate-600 text-slate-300 text-sm font-medium px-5 py-2.5 rounded-xl transition-colors">Cancel</a>
+      </div>
+    </form>
+  </div>
+</div>
+
+<script>
+function previewAvatar(input) {
+  if (input.files && input.files[0]) {
+    const reader = new FileReader();
+    reader.onload = (e) => {
+      document.getElementById('avatar-preview').innerHTML = `<img src="${e.target.result}" class="w-full h-full object-cover" />`;
+    };
+    reader.readAsDataURL(input.files[0]);
+  }
+}
+</script>

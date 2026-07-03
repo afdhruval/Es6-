@@ -1,0 +1,134 @@
+<!-- Header -->
+<div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6">
+  <div>
+    <h2 class="text-xl font-bold text-white">Courses</h2>
+    <p class="text-slate-400 text-sm mt-0.5"><%= total %> total courses</p>
+  </div>
+  <a href="/courses/create"
+    class="inline-flex items-center gap-2 bg-primary-600 hover:bg-primary-700 text-white text-sm font-semibold px-4 py-2.5 rounded-xl transition-all duration-200 hover:shadow-lg hover:shadow-primary-900/30">
+    <i class="fa-solid fa-plus"></i> Add Course
+  </a>
+</div>
+
+<!-- Filter Bar -->
+<div class="bg-slate-800 border border-slate-700/50 rounded-2xl p-4 mb-5">
+  <form method="GET" action="/courses" class="flex flex-wrap gap-3">
+    <div class="relative flex-1 min-w-[200px]">
+      <span class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+        <i class="fa-solid fa-magnifying-glass text-slate-500 text-sm"></i>
+      </span>
+      <input type="text" name="search" value="<%= search %>" placeholder="Search courses..."
+        class="w-full bg-slate-700/50 border border-slate-600 text-white placeholder-slate-500 rounded-xl pl-9 pr-4 py-2.5 text-sm focus:outline-none focus:border-primary-500 transition-colors" />
+    </div>
+    <select name="category" class="bg-slate-700/50 border border-slate-600 text-slate-300 rounded-xl px-3 py-2.5 text-sm focus:outline-none focus:border-primary-500 transition-colors">
+      <option value="">All Categories</option>
+      <% categories.forEach(cat => { %>
+        <option value="<%= cat._id %>" <%= categoryFilter == cat._id.toString() ? 'selected' : '' %>><%= cat.name %></option>
+      <% }); %>
+    </select>
+    <select name="status" class="bg-slate-700/50 border border-slate-600 text-slate-300 rounded-xl px-3 py-2.5 text-sm focus:outline-none focus:border-primary-500 transition-colors">
+      <option value="">All Statuses</option>
+      <option value="published" <%= statusFilter === 'published' ? 'selected' : '' %>>Published</option>
+      <option value="draft" <%= statusFilter === 'draft' ? 'selected' : '' %>>Draft</option>
+      <option value="archived" <%= statusFilter === 'archived' ? 'selected' : '' %>>Archived</option>
+    </select>
+    <select name="level" class="bg-slate-700/50 border border-slate-600 text-slate-300 rounded-xl px-3 py-2.5 text-sm focus:outline-none focus:border-primary-500 transition-colors">
+      <option value="">All Levels</option>
+      <option value="beginner" <%= levelFilter === 'beginner' ? 'selected' : '' %>>Beginner</option>
+      <option value="intermediate" <%= levelFilter === 'intermediate' ? 'selected' : '' %>>Intermediate</option>
+      <option value="advanced" <%= levelFilter === 'advanced' ? 'selected' : '' %>>Advanced</option>
+    </select>
+    <button type="submit" class="bg-primary-600 hover:bg-primary-700 text-white text-sm font-semibold px-4 py-2.5 rounded-xl transition-colors">
+      <i class="fa-solid fa-filter mr-1"></i> Filter
+    </button>
+    <% if (search || categoryFilter || statusFilter || levelFilter) { %>
+      <a href="/courses" class="bg-slate-700 hover:bg-slate-600 text-slate-300 text-sm font-medium px-4 py-2.5 rounded-xl transition-colors flex items-center gap-1">
+        <i class="fa-solid fa-xmark"></i> Clear
+      </a>
+    <% } %>
+  </form>
+</div>
+
+<!-- Courses Grid -->
+<% if (courses && courses.length > 0) { %>
+  <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4 mb-6">
+    <% courses.forEach(course => { %>
+      <div class="bg-slate-800 border border-slate-700/50 rounded-2xl overflow-hidden hover:border-primary-500/30 transition-all duration-200 group">
+        <!-- Thumbnail -->
+        <div class="relative h-40 bg-slate-700">
+          <% if (course.thumbnail) { %>
+            <img src="<%= course.thumbnail %>" class="w-full h-full object-cover" />
+          <% } else { %>
+            <div class="w-full h-full flex items-center justify-center">
+              <i class="fa-solid fa-book-open text-4xl text-slate-600"></i>
+            </div>
+          <% } %>
+          <!-- Status Badge -->
+          <div class="absolute top-3 right-3">
+            <span class="text-xs font-semibold px-2.5 py-1 rounded-full
+              <%= course.status === 'published' ? 'bg-emerald-500 text-white' :
+                  course.status === 'draft' ? 'bg-slate-600 text-slate-300' : 'bg-red-500/80 text-white' %>">
+              <%= course.status.charAt(0).toUpperCase() + course.status.slice(1) %>
+            </span>
+          </div>
+          <!-- Level Badge -->
+          <div class="absolute top-3 left-3">
+            <span class="text-xs font-medium px-2 py-1 rounded-lg bg-black/50 text-white backdrop-blur-sm">
+              <%= course.level.charAt(0).toUpperCase() + course.level.slice(1) %>
+            </span>
+          </div>
+        </div>
+
+        <!-- Content -->
+        <div class="p-5">
+          <% if (course.category) { %>
+            <span class="inline-block text-xs font-medium px-2 py-0.5 rounded-md mb-2" style="background-color: <%= course.category.color %>20; color: <%= course.category.color %>">
+              <%= course.category.name %>
+            </span>
+          <% } %>
+          <h3 class="text-sm font-semibold text-white mb-1 line-clamp-2"><%= course.title %></h3>
+          <p class="text-xs text-slate-500 mb-3">
+            <% if (course.teacher) { %><i class="fa-solid fa-chalkboard-teacher mr-1"></i><%= course.teacher.name %><% } else { %><span class="text-amber-500">No teacher assigned</span><% } %>
+          </p>
+
+          <div class="flex items-center justify-between mb-4">
+            <p class="text-base font-bold text-white">₹<%= (course.price || 0).toLocaleString('en-IN') %></p>
+            <p class="text-xs text-slate-400"><%= course.duration || 'Duration N/A' %></p>
+          </div>
+
+          <!-- Actions -->
+          <div class="flex items-center gap-2">
+            <a href="/courses/<%= course._id %>/edit" class="flex-1 flex items-center justify-center gap-1.5 py-2 rounded-xl bg-slate-700 hover:bg-indigo-600/30 hover:text-indigo-400 text-slate-300 text-xs font-medium transition-colors">
+              <i class="fa-solid fa-pen"></i> Edit
+            </a>
+            <form method="POST" action="/courses/<%= course._id %>">
+              <input type="hidden" name="_action" value="<%= course.status === 'published' ? 'unpublish' : 'publish' %>" />
+              <button type="submit" class="flex items-center justify-center gap-1.5 px-3 py-2 rounded-xl bg-slate-700 hover:bg-emerald-600/30 hover:text-emerald-400 text-slate-300 text-xs font-medium transition-colors">
+                <i class="fa-solid <%= course.status === 'published' ? 'fa-eye-slash' : 'fa-eye' %>"></i>
+              </button>
+            </form>
+            <form method="POST" action="/courses/<%= course._id %>" onsubmit="return confirmDelete(event, '<%= course.title %>')">
+              <input type="hidden" name="_action" value="delete" />
+              <button type="submit" class="flex items-center justify-center gap-1.5 px-3 py-2 rounded-xl bg-slate-700 hover:bg-red-600/30 hover:text-red-400 text-slate-300 text-xs font-medium transition-colors">
+                <i class="fa-solid fa-trash"></i>
+              </button>
+            </form>
+          </div>
+        </div>
+      </div>
+    <% }); %>
+  </div>
+
+  <!-- Pagination -->
+  <div class="bg-slate-800 border border-slate-700/50 rounded-2xl px-6">
+    <%- include('../partials/pagination') %>
+  </div>
+<% } else { %>
+  <div class="bg-slate-800 border border-slate-700/50 rounded-2xl flex flex-col items-center justify-center py-16 text-slate-500">
+    <div class="w-20 h-20 rounded-full bg-slate-700/50 flex items-center justify-center mb-4">
+      <i class="fa-solid fa-book-open text-3xl opacity-30"></i>
+    </div>
+    <p class="text-base font-medium text-slate-400">No courses found</p>
+    <a href="/courses/create" class="mt-2 text-sm text-primary-400 hover:text-primary-300 transition-colors">Create your first course</a>
+  </div>
+<% } %>

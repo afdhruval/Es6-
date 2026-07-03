@@ -1,0 +1,174 @@
+<!-- Header -->
+<div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6">
+  <div>
+    <h2 class="text-xl font-bold text-white">Categories</h2>
+    <p class="text-slate-400 text-sm mt-0.5"><%= categories.length %> total categories</p>
+  </div>
+  <button onclick="document.getElementById('add-category-modal').classList.remove('hidden')"
+    class="inline-flex items-center gap-2 bg-primary-600 hover:bg-primary-700 text-white text-sm font-semibold px-4 py-2.5 rounded-xl transition-all duration-200 hover:shadow-lg hover:shadow-primary-900/30">
+    <i class="fa-solid fa-plus"></i> Add Category
+  </button>
+</div>
+
+<!-- Categories Grid -->
+<% if (categories && categories.length > 0) { %>
+  <div class="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-4 mb-6">
+    <% categories.forEach(category => { %>
+      <div class="bg-slate-800 border border-slate-700/50 rounded-2xl p-5 hover:border-slate-600 transition-all duration-200 group">
+        <div class="flex items-start justify-between mb-4">
+          <div class="flex items-center gap-3">
+            <div class="w-11 h-11 rounded-xl flex items-center justify-center" style="background-color: <%= category.color %>20; border: 1px solid <%= category.color %>40;">
+              <i class="fa-solid <%= category.icon %>" style="color: <%= category.color %>"></i>
+            </div>
+            <div>
+              <h3 class="text-sm font-semibold text-white"><%= category.name %></h3>
+              <p class="text-xs text-slate-500"><%= category.courseCount %> course<%= category.courseCount !== 1 ? 's' : '' %></p>
+            </div>
+          </div>
+          <span class="text-xs font-medium px-2 py-1 rounded-full
+            <%= category.status === 'active' ? 'bg-emerald-500/10 text-emerald-400' : 'bg-slate-700 text-slate-500' %>">
+            <%= category.status %>
+          </span>
+        </div>
+
+        <% if (category.description) { %>
+          <p class="text-xs text-slate-400 mb-4 line-clamp-2"><%= category.description %></p>
+        <% } %>
+
+        <!-- Actions -->
+        <div class="flex items-center gap-2 pt-3 border-t border-slate-700/50">
+          <button onclick="openEditModal('<%= category._id %>', '<%= category.name %>', `<%= category.description %>`, '<%= category.icon %>', '<%= category.color %>', '<%= category.status %>')"
+            class="flex-1 flex items-center justify-center gap-1.5 py-2 rounded-xl bg-slate-700 hover:bg-indigo-600/30 hover:text-indigo-400 text-slate-300 text-xs font-medium transition-colors">
+            <i class="fa-solid fa-pen"></i> Edit
+          </button>
+          <form method="POST" action="/categories/<%= category._id %>">
+            <input type="hidden" name="_action" value="toggle-status" />
+            <button type="submit" class="flex items-center gap-1.5 px-3 py-2 rounded-xl bg-slate-700 hover:bg-amber-600/30 hover:text-amber-400 text-slate-300 text-xs font-medium transition-colors">
+              <i class="fa-solid <%= category.status === 'active' ? 'fa-toggle-on' : 'fa-toggle-off' %>"></i>
+            </button>
+          </form>
+          <form method="POST" action="/categories/<%= category._id %>" onsubmit="return confirmDelete(event, '<%= category.name %>')">
+            <input type="hidden" name="_action" value="delete" />
+            <button type="submit" class="flex items-center gap-1.5 px-3 py-2 rounded-xl bg-slate-700 hover:bg-red-600/30 hover:text-red-400 text-slate-300 text-xs font-medium transition-colors">
+              <i class="fa-solid fa-trash"></i>
+            </button>
+          </form>
+        </div>
+      </div>
+    <% }); %>
+  </div>
+<% } else { %>
+  <div class="bg-slate-800 border border-slate-700/50 rounded-2xl flex flex-col items-center justify-center py-16">
+    <div class="w-20 h-20 rounded-full bg-slate-700/50 flex items-center justify-center mb-4">
+      <i class="fa-solid fa-tags text-3xl text-slate-600"></i>
+    </div>
+    <p class="text-base font-medium text-slate-400">No categories yet</p>
+    <p class="text-sm text-slate-500 mt-1">Add your first category to organize courses</p>
+  </div>
+<% } %>
+
+<!-- Add Category Modal -->
+<div id="add-category-modal" class="hidden fixed inset-0 bg-black/60 z-50 flex items-center justify-center p-4">
+  <div class="bg-slate-800 border border-slate-700 rounded-2xl p-6 w-full max-w-md shadow-2xl">
+    <div class="flex items-center justify-between mb-5">
+      <h3 class="text-base font-semibold text-white">Add Category</h3>
+      <button onclick="document.getElementById('add-category-modal').classList.add('hidden')" class="text-slate-400 hover:text-white">
+        <i class="fa-solid fa-xmark"></i>
+      </button>
+    </div>
+    <form method="POST" action="/categories/create" class="space-y-4">
+      <div>
+        <label class="block text-sm font-medium text-slate-300 mb-1.5">Name <span class="text-red-400">*</span></label>
+        <input type="text" name="name" required placeholder="e.g. Web Development"
+          class="w-full bg-slate-700/50 border border-slate-600 text-white placeholder-slate-500 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:border-primary-500 transition-colors" />
+      </div>
+      <div>
+        <label class="block text-sm font-medium text-slate-300 mb-1.5">Description</label>
+        <textarea name="description" rows="2" placeholder="Short description..."
+          class="w-full bg-slate-700/50 border border-slate-600 text-white placeholder-slate-500 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:border-primary-500 transition-colors resize-none"></textarea>
+      </div>
+      <div class="grid grid-cols-2 gap-3">
+        <div>
+          <label class="block text-sm font-medium text-slate-300 mb-1.5">Icon Class</label>
+          <input type="text" name="icon" value="fa-book" placeholder="fa-book"
+            class="w-full bg-slate-700/50 border border-slate-600 text-white placeholder-slate-500 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:border-primary-500 transition-colors" />
+        </div>
+        <div>
+          <label class="block text-sm font-medium text-slate-300 mb-1.5">Color</label>
+          <input type="color" name="color" value="#6366f1"
+            class="w-full bg-slate-700/50 border border-slate-600 rounded-xl px-2 py-1.5 h-10 cursor-pointer focus:outline-none" />
+        </div>
+      </div>
+      <div class="flex gap-3 pt-2">
+        <button type="submit" class="flex-1 bg-primary-600 hover:bg-primary-700 text-white text-sm font-semibold py-2.5 rounded-xl transition-colors">
+          <i class="fa-solid fa-plus mr-1"></i> Create
+        </button>
+        <button type="button" onclick="document.getElementById('add-category-modal').classList.add('hidden')"
+          class="flex-1 bg-slate-700 hover:bg-slate-600 text-slate-300 text-sm py-2.5 rounded-xl transition-colors">Cancel</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<!-- Edit Category Modal -->
+<div id="edit-category-modal" class="hidden fixed inset-0 bg-black/60 z-50 flex items-center justify-center p-4">
+  <div class="bg-slate-800 border border-slate-700 rounded-2xl p-6 w-full max-w-md shadow-2xl">
+    <div class="flex items-center justify-between mb-5">
+      <h3 class="text-base font-semibold text-white">Edit Category</h3>
+      <button onclick="document.getElementById('edit-category-modal').classList.add('hidden')" class="text-slate-400 hover:text-white">
+        <i class="fa-solid fa-xmark"></i>
+      </button>
+    </div>
+    <form id="edit-category-form" method="POST" class="space-y-4">
+      <input type="hidden" name="_action" value="update" />
+      <div>
+        <label class="block text-sm font-medium text-slate-300 mb-1.5">Name <span class="text-red-400">*</span></label>
+        <input type="text" id="edit-name" name="name" required
+          class="w-full bg-slate-700/50 border border-slate-600 text-white rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:border-primary-500 transition-colors" />
+      </div>
+      <div>
+        <label class="block text-sm font-medium text-slate-300 mb-1.5">Description</label>
+        <textarea id="edit-description" name="description" rows="2"
+          class="w-full bg-slate-700/50 border border-slate-600 text-white rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:border-primary-500 transition-colors resize-none"></textarea>
+      </div>
+      <div class="grid grid-cols-2 gap-3">
+        <div>
+          <label class="block text-sm font-medium text-slate-300 mb-1.5">Icon Class</label>
+          <input type="text" id="edit-icon" name="icon"
+            class="w-full bg-slate-700/50 border border-slate-600 text-white rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:border-primary-500 transition-colors" />
+        </div>
+        <div>
+          <label class="block text-sm font-medium text-slate-300 mb-1.5">Color</label>
+          <input type="color" id="edit-color" name="color"
+            class="w-full bg-slate-700/50 border border-slate-600 rounded-xl px-2 py-1.5 h-10 cursor-pointer focus:outline-none" />
+        </div>
+      </div>
+      <div>
+        <label class="block text-sm font-medium text-slate-300 mb-1.5">Status</label>
+        <select id="edit-status" name="status" class="w-full bg-slate-700/50 border border-slate-600 text-slate-300 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:border-primary-500 transition-colors">
+          <option value="active">Active</option>
+          <option value="inactive">Inactive</option>
+        </select>
+      </div>
+      <div class="flex gap-3 pt-2">
+        <button type="submit" class="flex-1 bg-primary-600 hover:bg-primary-700 text-white text-sm font-semibold py-2.5 rounded-xl transition-colors">
+          <i class="fa-solid fa-floppy-disk mr-1"></i> Save
+        </button>
+        <button type="button" onclick="document.getElementById('edit-category-modal').classList.add('hidden')"
+          class="flex-1 bg-slate-700 hover:bg-slate-600 text-slate-300 text-sm py-2.5 rounded-xl transition-colors">Cancel</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<script>
+function openEditModal(id, name, description, icon, color, status) {
+  document.getElementById('edit-category-form').action = `/categories/${id}`;
+  document.getElementById('edit-name').value = name;
+  document.getElementById('edit-description').value = description;
+  document.getElementById('edit-icon').value = icon;
+  document.getElementById('edit-color').value = color;
+  document.getElementById('edit-status').value = status;
+  document.getElementById('edit-category-modal').classList.remove('hidden');
+}
+</script>

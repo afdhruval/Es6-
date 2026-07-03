@@ -1,0 +1,125 @@
+<!-- Breadcrumb -->
+<div class="flex items-center gap-2 text-sm text-slate-500 mb-6">
+  <a href="/courses" class="hover:text-white transition-colors">Courses</a>
+  <i class="fa-solid fa-chevron-right text-xs"></i>
+  <span class="text-slate-300">Edit: <%= course.title %></span>
+</div>
+
+<div class="max-w-3xl">
+  <div class="bg-slate-800 border border-slate-700/50 rounded-2xl overflow-hidden">
+    <div class="px-6 py-5 border-b border-slate-700/50">
+      <h2 class="text-base font-semibold text-white">Edit Course</h2>
+    </div>
+
+    <form method="POST" action="/courses/<%= course._id %>" enctype="multipart/form-data" class="px-6 py-6 space-y-5">
+      <input type="hidden" name="_action" value="update" />
+
+      <!-- Thumbnail -->
+      <div>
+        <label class="block text-sm font-medium text-slate-300 mb-2">Course Thumbnail</label>
+        <div class="flex items-start gap-4">
+          <div id="thumb-preview" class="w-32 h-24 rounded-xl bg-slate-700 overflow-hidden border-2 border-dashed border-slate-600 flex items-center justify-center">
+            <% if (course.thumbnail) { %>
+              <img src="<%= course.thumbnail %>" class="w-full h-full object-cover" />
+            <% } else { %>
+              <i class="fa-solid fa-image text-slate-500 text-2xl"></i>
+            <% } %>
+          </div>
+          <label class="cursor-pointer inline-flex items-center gap-2 bg-slate-700 hover:bg-slate-600 text-slate-300 text-sm font-medium px-4 py-2 rounded-xl transition-colors border border-slate-600">
+            <i class="fa-solid fa-upload text-xs"></i> Change Thumbnail
+            <input type="file" name="thumbnail" accept="image/*" class="hidden" onchange="previewThumb(this)" />
+          </label>
+        </div>
+      </div>
+
+      <div>
+        <label class="block text-sm font-medium text-slate-300 mb-1.5">Course Title <span class="text-red-400">*</span></label>
+        <input type="text" name="title" value="<%= course.title %>" required
+          class="w-full bg-slate-700/50 border border-slate-600 text-white rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:border-primary-500 transition-colors" />
+      </div>
+
+      <div>
+        <label class="block text-sm font-medium text-slate-300 mb-1.5">Description</label>
+        <textarea name="description" rows="4"
+          class="w-full bg-slate-700/50 border border-slate-600 text-white rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:border-primary-500 transition-colors resize-none"><%= course.description %></textarea>
+      </div>
+
+      <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+        <div>
+          <label class="block text-sm font-medium text-slate-300 mb-1.5">Category <span class="text-red-400">*</span></label>
+          <select name="category" required class="w-full bg-slate-700/50 border border-slate-600 text-slate-300 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:border-primary-500 transition-colors">
+            <option value="">Select category</option>
+            <% categories.forEach(cat => { %>
+              <option value="<%= cat._id %>" <%= course.category && course.category.toString() === cat._id.toString() ? 'selected' : '' %>><%= cat.name %></option>
+            <% }); %>
+          </select>
+        </div>
+        <div>
+          <label class="block text-sm font-medium text-slate-300 mb-1.5">Teacher</label>
+          <select name="teacher" class="w-full bg-slate-700/50 border border-slate-600 text-slate-300 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:border-primary-500 transition-colors">
+            <option value="">No teacher</option>
+            <% teachers.forEach(teacher => { %>
+              <option value="<%= teacher._id %>" <%= course.teacher && course.teacher.toString() === teacher._id.toString() ? 'selected' : '' %>><%= teacher.name %></option>
+            <% }); %>
+          </select>
+        </div>
+      </div>
+
+      <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+        <div>
+          <label class="block text-sm font-medium text-slate-300 mb-1.5">Price (₹)</label>
+          <input type="number" name="price" min="0" step="0.01" value="<%= course.price %>"
+            class="w-full bg-slate-700/50 border border-slate-600 text-white rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:border-primary-500 transition-colors" />
+        </div>
+        <div>
+          <label class="block text-sm font-medium text-slate-300 mb-1.5">Duration</label>
+          <input type="text" name="duration" value="<%= course.duration %>" placeholder="e.g. 12 hours"
+            class="w-full bg-slate-700/50 border border-slate-600 text-white rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:border-primary-500 transition-colors" />
+        </div>
+        <div>
+          <label class="block text-sm font-medium text-slate-300 mb-1.5">Level</label>
+          <select name="level" class="w-full bg-slate-700/50 border border-slate-600 text-slate-300 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:border-primary-500 transition-colors">
+            <option value="beginner" <%= course.level === 'beginner' ? 'selected' : '' %>>Beginner</option>
+            <option value="intermediate" <%= course.level === 'intermediate' ? 'selected' : '' %>>Intermediate</option>
+            <option value="advanced" <%= course.level === 'advanced' ? 'selected' : '' %>>Advanced</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+        <div>
+          <label class="block text-sm font-medium text-slate-300 mb-1.5">Tags</label>
+          <input type="text" name="tags" value="<%= course.tags ? course.tags.join(', ') : '' %>"
+            class="w-full bg-slate-700/50 border border-slate-600 text-white rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:border-primary-500 transition-colors" />
+        </div>
+        <div>
+          <label class="block text-sm font-medium text-slate-300 mb-1.5">Status</label>
+          <select name="status" class="w-full bg-slate-700/50 border border-slate-600 text-slate-300 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:border-primary-500 transition-colors">
+            <option value="draft" <%= course.status === 'draft' ? 'selected' : '' %>>Draft</option>
+            <option value="published" <%= course.status === 'published' ? 'selected' : '' %>>Published</option>
+            <option value="archived" <%= course.status === 'archived' ? 'selected' : '' %>>Archived</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="flex items-center gap-3 pt-2">
+        <button type="submit" class="bg-primary-600 hover:bg-primary-700 text-white text-sm font-semibold px-6 py-2.5 rounded-xl transition-all duration-200 flex items-center gap-2">
+          <i class="fa-solid fa-floppy-disk"></i> Save Changes
+        </button>
+        <a href="/courses" class="bg-slate-700 hover:bg-slate-600 text-slate-300 text-sm font-medium px-5 py-2.5 rounded-xl transition-colors">Cancel</a>
+      </div>
+    </form>
+  </div>
+</div>
+
+<script>
+function previewThumb(input) {
+  if (input.files && input.files[0]) {
+    const reader = new FileReader();
+    reader.onload = (e) => {
+      document.getElementById('thumb-preview').innerHTML = `<img src="${e.target.result}" class="w-full h-full object-cover" />`;
+    };
+    reader.readAsDataURL(input.files[0]);
+  }
+}
+</script>
