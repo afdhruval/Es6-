@@ -1,0 +1,131 @@
+<!-- Header -->
+<div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6">
+  <div>
+    <h2 class="text-xl font-bold text-white">Students</h2>
+    <p class="text-slate-400 text-sm mt-0.5"><%= total %> total students</p>
+  </div>
+  <a href="/students/create"
+    class="inline-flex items-center gap-2 bg-primary-600 hover:bg-primary-700 text-white text-sm font-semibold px-4 py-2.5 rounded-xl transition-all duration-200 hover:shadow-lg hover:shadow-primary-900/30">
+    <i class="fa-solid fa-user-plus"></i> Add Student
+  </a>
+</div>
+
+<!-- Search & Filter Bar -->
+<div class="bg-slate-800 border border-slate-700/50 rounded-2xl p-4 mb-5">
+  <form method="GET" action="/students" class="flex flex-col sm:flex-row gap-3">
+    <div class="relative flex-1">
+      <span class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+        <i class="fa-solid fa-magnifying-glass text-slate-500 text-sm"></i>
+      </span>
+      <input type="text" name="search" value="<%= search %>" placeholder="Search by name, email, phone..."
+        class="w-full bg-slate-700/50 border border-slate-600 text-white placeholder-slate-500 rounded-xl pl-9 pr-4 py-2.5 text-sm focus:outline-none focus:border-primary-500 focus:ring-1 focus:ring-primary-500/50 transition-colors" />
+    </div>
+    <select name="status"
+      class="bg-slate-700/50 border border-slate-600 text-slate-300 rounded-xl px-3 py-2.5 text-sm focus:outline-none focus:border-primary-500 transition-colors">
+      <option value="">All Statuses</option>
+      <option value="active" <%= statusFilter === 'active' ? 'selected' : '' %>>Active</option>
+      <option value="suspended" <%= statusFilter === 'suspended' ? 'selected' : '' %>>Suspended</option>
+    </select>
+    <button type="submit" class="bg-primary-600 hover:bg-primary-700 text-white text-sm font-semibold px-4 py-2.5 rounded-xl transition-colors">
+      <i class="fa-solid fa-filter mr-1"></i> Filter
+    </button>
+    <% if (search || statusFilter) { %>
+      <a href="/students" class="bg-slate-700 hover:bg-slate-600 text-slate-300 text-sm font-medium px-4 py-2.5 rounded-xl transition-colors flex items-center gap-1">
+        <i class="fa-solid fa-xmark"></i> Clear
+      </a>
+    <% } %>
+  </form>
+</div>
+
+<!-- Table -->
+<div class="bg-slate-800 border border-slate-700/50 rounded-2xl overflow-hidden">
+  <% if (students && students.length > 0) { %>
+    <div class="overflow-x-auto">
+      <table class="w-full">
+        <thead>
+          <tr class="text-xs text-slate-500 uppercase tracking-wider border-b border-slate-700/50 bg-slate-800/80">
+            <th class="px-6 py-4 text-left">Student</th>
+            <th class="px-6 py-4 text-left">Phone</th>
+            <th class="px-6 py-4 text-left">Status</th>
+            <th class="px-6 py-4 text-left">Joined</th>
+            <th class="px-6 py-4 text-left">Actions</th>
+          </tr>
+        </thead>
+        <tbody class="divide-y divide-slate-700/30">
+          <% students.forEach(student => { %>
+            <tr class="hover:bg-slate-700/20 transition-colors group">
+              <td class="px-6 py-4">
+                <div class="flex items-center gap-3">
+                  <% if (student.avatar) { %>
+                    <img src="<%= student.avatar %>" alt="<%= student.name %>" class="w-9 h-9 rounded-full object-cover ring-2 ring-slate-600" />
+                  <% } else { %>
+                    <div class="w-9 h-9 rounded-full bg-gradient-to-br from-blue-600 to-indigo-700 flex items-center justify-center text-sm font-bold text-white">
+                      <%= student.name.charAt(0).toUpperCase() %>
+                    </div>
+                  <% } %>
+                  <div>
+                    <p class="text-sm font-semibold text-slate-200"><%= student.name %></p>
+                    <p class="text-xs text-slate-500"><%= student.email %></p>
+                  </div>
+                </div>
+              </td>
+              <td class="px-6 py-4 text-sm text-slate-400"><%= student.phone || '—' %></td>
+              <td class="px-6 py-4">
+                <span class="inline-flex items-center gap-1.5 text-xs font-medium px-2.5 py-1 rounded-full
+                  <%= student.status === 'active' ? 'bg-emerald-500/10 text-emerald-400 border border-emerald-500/20' : 'bg-red-500/10 text-red-400 border border-red-500/20' %>">
+                  <span class="w-1.5 h-1.5 rounded-full <%= student.status === 'active' ? 'bg-emerald-400' : 'bg-red-400' %>"></span>
+                  <%= student.status.charAt(0).toUpperCase() + student.status.slice(1) %>
+                </span>
+              </td>
+              <td class="px-6 py-4 text-xs text-slate-500"><%= student.createdAt.toLocaleDateString('en-IN') %></td>
+              <td class="px-6 py-4">
+                <div class="flex items-center gap-2 opacity-70 group-hover:opacity-100 transition-opacity">
+                  <a href="/students/<%= student._id %>" class="w-8 h-8 rounded-lg bg-slate-700 hover:bg-blue-600/30 hover:text-blue-400 flex items-center justify-center text-slate-400 transition-colors" title="View">
+                    <i class="fa-solid fa-eye text-xs"></i>
+                  </a>
+                  <a href="/students/<%= student._id %>/edit" class="w-8 h-8 rounded-lg bg-slate-700 hover:bg-indigo-600/30 hover:text-indigo-400 flex items-center justify-center text-slate-400 transition-colors" title="Edit">
+                    <i class="fa-solid fa-pen text-xs"></i>
+                  </a>
+                  <!-- Suspend / Activate -->
+                  <form method="POST" action="/students/<%= student._id %>">
+                    <input type="hidden" name="_action" value="<%= student.status === 'active' ? 'suspend' : 'activate' %>" />
+                    <button type="submit" class="w-8 h-8 rounded-lg bg-slate-700 hover:bg-amber-600/30 hover:text-amber-400 flex items-center justify-center text-slate-400 transition-colors"
+                      title="<%= student.status === 'active' ? 'Suspend' : 'Activate' %>">
+                      <i class="fa-solid <%= student.status === 'active' ? 'fa-ban' : 'fa-circle-check' %> text-xs"></i>
+                    </button>
+                  </form>
+                  <!-- Delete -->
+                  <form method="POST" action="/students/<%= student._id %>" onsubmit="return confirmDelete(event, '<%= student.name %>')">
+                    <input type="hidden" name="_action" value="delete" />
+                    <button type="submit" class="w-8 h-8 rounded-lg bg-slate-700 hover:bg-red-600/30 hover:text-red-400 flex items-center justify-center text-slate-400 transition-colors" title="Delete">
+                      <i class="fa-solid fa-trash text-xs"></i>
+                    </button>
+                  </form>
+                </div>
+              </td>
+            </tr>
+          <% }); %>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- Pagination -->
+    <div class="px-6">
+      <%- include('../partials/pagination') %>
+    </div>
+  <% } else { %>
+    <div class="flex flex-col items-center justify-center py-16 text-slate-500">
+      <div class="w-20 h-20 rounded-full bg-slate-700/50 flex items-center justify-center mb-4">
+        <i class="fa-solid fa-users text-3xl opacity-30"></i>
+      </div>
+      <p class="text-base font-medium text-slate-400">No students found</p>
+      <p class="text-sm text-slate-500 mt-1">
+        <% if (search || statusFilter) { %>
+          Try adjusting your search or filter.
+        <% } else { %>
+          <a href="/students/create" class="text-primary-400 hover:text-primary-300 transition-colors">Add your first student</a>
+        <% } %>
+      </p>
+    </div>
+  <% } %>
+</div>
